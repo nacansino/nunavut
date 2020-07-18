@@ -24,6 +24,12 @@
 #ifndef {{T.full_name | c.macrofy}}_INCLUDED
 #define {{T.full_name | c.macrofy}}_INCLUDED
 
+{%- if little_endian_support %}
+#include <nunavut_le.h>
+{%- else %}
+#include <nunavut.h>
+{%- endif %}
+
 {% for n in T | includes -%}
 #include {{ n }}
 {% endfor %}
