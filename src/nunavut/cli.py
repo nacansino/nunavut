@@ -93,7 +93,8 @@ def _run(args: argparse.Namespace, extra_includes: typing.List[str]) -> int:  # 
         'templates_dir': (pathlib.Path(args.templates) if args.templates is not None else None),
         'trim_blocks': args.trim_blocks,
         'lstrip_blocks': args.lstrip_blocks,
-        'post_processors': _build_post_processor_list_from_args(args)
+        'post_processors': _build_post_processor_list_from_args(args),
+        'additional_globals': {'little_endian_support': args.little_endian_support},
     }
 
     from nunavut.generators import create_generators
@@ -372,6 +373,18 @@ def _make_parser() -> argparse.ArgumentParser:
         Additional arguments to provide to the program specified by --pp-run-program.
         The last argument will always be the path to the generated file.
 
+    ''').lstrip())
+
+    parser.add_argument('-le', '--little-endian-support',
+                        action='store_true',
+                        help=textwrap.dedent('''
+
+        Enables specific support for little-endian optimizations in languages that
+        support it.
+
+        The default implementations will work with any endianness, but they are less
+        optimized than their little-endian counterparts.
+        NOTE: the little-endian methods only work on native little-endian architectures.
     ''').lstrip())
 
     return parser
