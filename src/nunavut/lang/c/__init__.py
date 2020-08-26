@@ -94,6 +94,9 @@ class VariableNameEncoder:
               token: str,
               reserved_words: typing.FrozenSet[str],
               reserved_patterns: typing.Optional[typing.FrozenSet[typing.Pattern]] = None) -> str:
+        if len(token) == 0:
+            return token
+
         encoded = str(self._token_pattern.sub(self._filter_id_illegal_character_replacement, token))
         if encoded in reserved_words or self._matches(encoded, reserved_patterns):
             stropped = (self._stropping_prefix + encoded + self._stropping_suffix)
