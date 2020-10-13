@@ -67,7 +67,8 @@ def _run(args: argparse.Namespace, extra_includes: typing.List[str]) -> int:  # 
 
     language_options = None
 
-    if args.target_language is not None:
+    # enable the setting of language option
+    if args.target_language is not None or args.output_extension is not None:
         language_options = dict()
         if args.target_endianness is not None:
             language_options['target_endianness'] = args.target_endianness

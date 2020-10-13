@@ -26,8 +26,8 @@
 extern "C"
 {
 #else
-#   if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L)
-#       error "Unsupported language: ISO C11 or a newer version is required."
+#   if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L)
+#       error "Unsupported language: ISO C99 or a newer version is required."
 #   endif
 #endif
 
@@ -39,6 +39,15 @@ extern "C"
 #include <stdint.h>
 #ifndef __cplusplus
 #include <assert.h> // For static_assert macro (C11)
+#endif
+
+/// In general, _Static_assert is not present on C99 compilers, except for gnu99
+#if !defined(static_assert)
+// Intentional violation of MISRA: static assertion macro cannot be replaced with a function definition.
+#    define static_assert(x, ...) typedef char _static_assert_gl(_static_assertion_, __LINE__)[(x) ? 1 : -1]  // NOSONAR
+#    define _static_assert_gl(a, b) _static_assert_gl_impl(a, b)                                              // NOSONAR
+// Intentional violation of MISRA: the paste operator ## cannot be avoided in this context.
+#    define _static_assert_gl_impl(a, b) a##b  // NOSONAR
 #endif
 
 static_assert(sizeof({{ typename_unsigned_bit_length }}) >= sizeof({{ typename_unsigned_length }}), "The bit-length type used by Nunavut, {{ typename_unsigned_bit_length }}, "
